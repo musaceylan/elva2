@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ELVA — design tokens
+   Direction: instrument panel. Graphite ground, amber as signal.
+   Amber is ELVA's logo colour and doubles as the industrial
+   warning hue, so it is spent only on live data and actions.
+   Ember is reserved exclusively for the unprotected/hazard state.
+   ============================================================ */
+
+@theme {
+  --color-graphite: #14161a;
+  --color-graphite-deep: #0e1013;
+  --color-steel: #1f2329;
+  --color-steel-line: #2b3038;
+
+  --color-chalk: #e8e6e1;
+  --color-slate-ink: #8b929b;
+
+  --color-amber: #f0902b;
+  --color-amber-soft: #f7b46a;
+  --color-ember: #d9342b;
+
+  --color-paper: #edeae4;
+  --color-paper-line: #d5d1c8;
+  --color-ink: #14161a;
+
+  --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
+  --font-body: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-precise: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-graphite);
+  color: var(--color-chalk);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Data / annotation layer — the instrument vernacular */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+
+/* Technical grid — appears only where data lives, never as wallpaper */
+.tech-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-steel-line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-steel-line) 55%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Focus: visible, high contrast, never removed */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-graphite);
+}
+
+/* Reduced motion: content is never gated behind animation */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-amber);
+  color: var(--color-graphite);
+  font-weight: 600;
+}
