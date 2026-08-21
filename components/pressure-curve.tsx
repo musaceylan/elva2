@@ -176,8 +176,9 @@ export function PressureCurve({
           <text x={X0 - 12} y={Y0 - 12} textAnchor="end" fill="var(--color-chalk)">
             BAR
           </text>
-          <text x={X1} y={Y1 + 26} textAnchor="end" fill="var(--color-chalk)">
-            MS
+          {/* sits a line below the ticks so it never collides with 300 */}
+          <text x={X1} y={Y1 + 50} textAnchor="end" fill="var(--color-chalk)">
+            MİLİSANİYE
           </text>
         </g>
 
