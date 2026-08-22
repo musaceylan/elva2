@@ -1,5 +1,7 @@
 "use client";
 
+import { asset } from "@/lib/asset";
+
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
@@ -125,7 +127,7 @@ export function Systems() {
                         }}
                       >
                         <Image
-                          src={openFamily.img}
+                          src={asset(openFamily.img)}
                           alt={openFamily.alt}
                           width={1200}
                           height={600}

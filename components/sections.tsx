@@ -1,5 +1,7 @@
 "use client";
 
+import { asset } from "@/lib/asset";
+
 import { Reveal } from "./motion-primitives";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { RevealImage } from "./image-primitives";
@@ -50,7 +52,7 @@ export function Services() {
           {/* The wipe runs left-to-right here so it reads against the
               top-to-bottom wipes used on the dark sections. */}
           <RevealImage
-            src="/img/srv-analiz.webp"
+            src={asset("/img/srv-analiz.webp")}
             alt="ELVA mühendisi tesiste yangın ve patlama risk analizi yaparken"
             from="left"
             tint={false}

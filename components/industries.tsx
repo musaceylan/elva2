@@ -1,5 +1,7 @@
 "use client";
 
+import { asset } from "@/lib/asset";
+
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent } from "motion/react";
@@ -58,7 +60,7 @@ export function Industries() {
               }}
             >
               <Image
-                src={current.img}
+                src={asset(current.img)}
                 alt=""
                 width={1200}
                 height={600}
@@ -96,7 +98,7 @@ export function Industries() {
                     <button
                       onClick={() => setActive(i)}
                       aria-current={on}
-                      className="group w-full flex items-baseline gap-4 py-3 text-left cursor-pointer"
+                      className="group w-full flex items-baseline gap-4 py-3.5 min-h-11 text-left cursor-pointer"
                     >
                       <span
                         className={`mono-label transition-colors duration-300 ${
@@ -133,7 +135,7 @@ export function Industries() {
                       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <Image
-                        src={current.img}
+                        src={asset(current.img)}
                         alt={current.alt}
                         width={1200}
                         height={600}

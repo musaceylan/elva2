@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   // itself a git repo and holds an unrelated package-lock.json.
   turbopack: { root: __dirname },
   output: "export",
+  // Read by lib/asset.ts; next/image cannot prefix basePath when unoptimized.
+  env: { NEXT_PUBLIC_BASE_PATH: isPages ? repo : "" },
   basePath: isPages ? repo : undefined,
   assetPrefix: isPages ? repo : undefined,
   trailingSlash: true,

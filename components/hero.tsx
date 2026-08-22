@@ -1,5 +1,7 @@
 "use client";
 
+import { asset } from "@/lib/asset";
+
 import {
   AnimatePresence,
   animate,
@@ -90,7 +92,7 @@ export function Hero() {
           aria-hidden
         >
           <Image
-            src="/img/hero-equipment.webp"
+            src={asset("/img/hero-equipment.webp")}
             alt=""
             width={1800}
             height={469}
