@@ -23,4 +23,12 @@ export function useMediaQuery(query: string) {
   return matches;
 }
 
+/** Drives layout behaviour: pinned sections and scroll scrubbing. */
 export const useIsDesktop = () => useMediaQuery("(min-width: 1024px)");
+
+/**
+ * Drives SVG type scaling, which is a different question from layout.
+ * An SVG scaled down to phone width needs larger nominal type; a tablet
+ * renders it near 1:1 and does not.
+ */
+export const useIsSmallScreen = () => !useMediaQuery("(min-width: 768px)");

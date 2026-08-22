@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { PressureCurve } from "./pressure-curve";
 import { SplitWords, useScrubbed } from "./motion-primitives";
-import { useIsDesktop } from "./use-breakpoint";
+import { useIsDesktop, useIsSmallScreen } from "./use-breakpoint";
 
 const PHASES = [
   {
@@ -39,6 +39,7 @@ const PHASES = [
 export function Hero() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
+  const isSmall = useIsSmallScreen();
   const reduced = useReducedMotion();
 
   // Desktop: scroll scrubs the trace across a pinned section.
@@ -161,7 +162,7 @@ export function Hero() {
                 </span>
               </div>
 
-              <PressureCurve progress={progress} compact={!isDesktop} />
+              <PressureCurve progress={progress} compact={isSmall} />
 
               <div className="mt-5 min-h-[112px] sm:min-h-[104px] border-l-2 border-amber pl-5">
                 <AnimatePresence mode="wait">

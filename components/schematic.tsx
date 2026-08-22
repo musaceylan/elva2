@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useMotionValueEvent } from "motion/react";
 import { useScrubbed } from "./motion-primitives";
-import { useIsDesktop } from "./use-breakpoint";
+import { useIsDesktop, useIsSmallScreen } from "./use-breakpoint";
 
 /* A dust collector protection scheme — the arrangement ELVA actually
    engineers. Callouts are keyed to the drawing, which is the standard
@@ -39,6 +39,7 @@ const PARTS = [
 export function Schematic() {
   const wrap = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
+  const isSmall = useIsSmallScreen();
   const progress = useScrubbed(wrap);
   const [active, setActive] = useState(0);
 
@@ -66,7 +67,7 @@ export function Schematic() {
           </h2>
 
           <div className="mt-10 lg:mt-12 grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-10 lg:gap-14 items-center">
-            <Drawing active={active} compact={!isDesktop} />
+            <Drawing active={active} compact={isSmall} />
 
             <ul>
               {PARTS.map((p, i) => {
