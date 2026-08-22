@@ -1,26 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 /**
  * Reports whether a media query currently matches.
  *
- * Starts false and resolves after mount so server and client markup agree;
- * callers must render a layout that is correct while the answer is still
- * unknown (mobile-first), not one that flashes.
+ * `matchMedia` is an external store, so it is read through
+ * useSyncExternalStore rather than mirrored into state inside an effect —
+ * that avoids the cascading render an effect-plus-setState pair causes.
+ *
+ * The server snapshot is always false, so callers must render a layout that
+ * is correct while the answer is still unknown (mobile-first).
  */
 export function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    [query],
+  );
 
-  useEffect(() => {
-    const mql = window.matchMedia(query);
-    setMatches(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setMatches(e.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, [query]);
+  const getSnapshot = useCallback(
+    () => window.matchMedia(query).matches,
+    [query],
+  );
 
-  return matches;
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
 }
 
 /** Drives layout behaviour: pinned sections and scroll scrubbing. */

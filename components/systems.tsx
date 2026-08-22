@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import { Plus } from "lucide-react";
 import { Reveal } from "./motion-primitives";
 
@@ -12,6 +13,8 @@ const FAMILIES = [
   {
     hazard: "Patlama",
     title: "Patlama önleme sistemleri",
+    img: "/img/sys-patlama.webp",
+    alt: "Patlama kapağı ve tahliye ünitesi",
     lede: "Toz ve gaz deflagrasyonunu kabın içinde bitirir; alevin hatta yayılmasını engeller.",
     items: [
       "Patlama kapakları",
@@ -24,12 +27,16 @@ const FAMILIES = [
   {
     hazard: "Aşırı basınç",
     title: "Aşırı basınçtan korunma",
+    img: "/img/sys-basinc.webp",
+    alt: "Patlama diskleri ve flanş bağlantı elemanları",
     lede: "Basınca bağlı plansız duruşları, ekipman hasarını ve zaman kaybını önler.",
     items: ["Patlama diskleri", "Basınç aktivasyon çözümleri", "Flanş koruyucular"],
   },
   {
     hazard: "Yangın",
     title: "Yangın algılama sistemleri",
+    img: "/img/sys-algilama.webp",
+    alt: "Endüstriyel alev dedektörü",
     lede: "Duman, alev, gaz ve sıcaklığı kaynağında yakalar — her saniye sayılır.",
     items: [
       "Adresli yangın alarm sistemleri",
@@ -44,6 +51,8 @@ const FAMILIES = [
   {
     hazard: "Yangın",
     title: "Yangın söndürme sistemleri",
+    img: "/img/sys-sondurme.webp",
+    alt: "Gazlı söndürme sistemi tüp bataryası",
     lede: "Ortama ve riske göre seçilen otomatik söndürme; varlık ve süreklilik koruması.",
     items: [
       "Gazlı söndürme sistemleri",
@@ -56,6 +65,8 @@ const FAMILIES = [
   {
     hazard: "Zone",
     title: "Ex-proof ürünler",
+    img: "/img/sys-exproof.webp",
+    alt: "Kıvılcım algılama ve söndürme ünitesi",
     lede: "Patlayıcı ortam sınıflandırması yapılmış zonlar için sertifikalı ekipman.",
     items: ["Ex-proof aydınlatma, buat ve ekipman çözümleri"],
   },
@@ -63,6 +74,7 @@ const FAMILIES = [
 
 export function Systems() {
   const [open, setOpen] = useState<number | null>(0);
+  const openFamily = open === null ? null : FAMILIES[open];
 
   return (
     <section
@@ -93,6 +105,45 @@ export function Systems() {
                 altında ele alır: tasarım, projelendirme, uygulama ve devreye
                 alma.
               </p>
+            </Reveal>
+
+            {/* The plate tracks whichever family is open and wipes between
+                them, so opening a row has a visual consequence. */}
+            <Reveal delay={0.18}>
+              <figure className="mt-9 border border-steel-line hidden lg:block">
+                <div className="relative aspect-[2/1] overflow-hidden bg-steel">
+                  <AnimatePresence initial={false}>
+                    {openFamily && (
+                      <motion.div
+                        key={openFamily.img}
+                        className="absolute inset-0"
+                        initial={{ clipPath: "inset(0 0 100% 0)", scale: 1.1 }}
+                        animate={{ clipPath: "inset(0 0 0% 0)", scale: 1 }}
+                        transition={{
+                          clipPath: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                          scale: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
+                        }}
+                      >
+                        <Image
+                          src={openFamily.img}
+                          alt={openFamily.alt}
+                          width={1200}
+                          height={600}
+                          loading="lazy"
+                          className="h-full w-full object-cover saturate-[0.5] contrast-110"
+                        />
+                        <div
+                          className="absolute inset-0 bg-graphite/25"
+                          aria-hidden
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <figcaption className="mono-label text-slate-ink px-4 py-3 border-t border-steel-line">
+                  {openFamily ? openFamily.alt : "Bir sistem ailesi seçin"}
+                </figcaption>
+              </figure>
             </Reveal>
           </div>
 

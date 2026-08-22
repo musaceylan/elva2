@@ -3,8 +3,8 @@ import { Hero } from "@/components/hero";
 import { Proof } from "@/components/proof";
 import { Systems } from "@/components/systems";
 import { Schematic } from "@/components/schematic";
+import { Industries } from "@/components/industries";
 import {
-  Industries,
   Services,
   Confidentiality,
   FinalCta,

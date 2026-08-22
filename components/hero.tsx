@@ -8,8 +8,10 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
+  useTransform,
 } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PressureCurve } from "./pressure-curve";
 import { SplitWords, useScrubbed } from "./motion-primitives";
@@ -62,6 +64,10 @@ export function Hero() {
 
   const progress = isDesktop ? scrubbed : played;
 
+  // The plate settles and fades as the event advances.
+  const plateY = useTransform(scrubbed, [0, 1], [0, -60]);
+  const plateOpacity = useTransform(scrubbed, [0, 0.7], [1, 0.25]);
+
   const [phase, setPhase] = useState(0);
   useMotionValueEvent(progress, "change", (v) => {
     const t = v * 300;
@@ -74,6 +80,26 @@ export function Hero() {
   return (
     <div ref={wrapRef} className="relative lg:h-[320vh]">
       <div className="lg:sticky lg:top-0 lg:h-screen flex items-center overflow-hidden pt-28 pb-16 lg:py-0">
+        {/* Atmospheric plate: the equipment sits low and dark behind the
+            content, giving the section depth without competing with the
+            trace. It drifts on scroll and is masked out before it reaches
+            the type. */}
+        <motion.div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%] hidden md:block"
+          style={reduced ? undefined : { y: plateY, opacity: plateOpacity }}
+          aria-hidden
+        >
+          <Image
+            src="/img/hero-equipment.webp"
+            alt=""
+            width={1800}
+            height={469}
+            priority
+            className="h-full w-full object-cover object-center opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-graphite via-graphite/70 to-graphite" />
+        </motion.div>
+
         <div
           className="pointer-events-none absolute inset-0 tech-grid opacity-[0.35]"
           aria-hidden

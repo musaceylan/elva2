@@ -2,72 +2,7 @@
 
 import { Reveal } from "./motion-primitives";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
-
-/* ------------------------------------------------------------------
-   Industries — the nine ELVA lists, each with the hazard that
-   actually drives protection in that sector.
-   ------------------------------------------------------------------ */
-const INDUSTRIES = [
-  { name: "Kimya & Petrokimya", risk: "Gaz ve buhar patlaması" },
-  { name: "Petrol & Doğalgaz", risk: "Hidrokarbon yangını" },
-  { name: "Makine & Üretim", risk: "Metal tozu, kıvılcım" },
-  { name: "Gıda", risk: "Nişasta, un, şeker tozu" },
-  { name: "İlaç", risk: "API tozu, çözücü buharı" },
-  { name: "Ağaç & Kağıt", risk: "Ahşap tozu, elyaf" },
-  { name: "Demir & Çelik", risk: "Yüksek sıcaklık, cüruf" },
-  { name: "Enerji", risk: "Kömür tozu, biyokütle" },
-  { name: "Veri Merkezleri & Kütüphaneler", risk: "Elektriksel yangın" },
-];
-
-export function Industries() {
-  return (
-    <section
-      id="endustriler"
-      className="py-24 md:py-32 border-t border-steel-line"
-      aria-labelledby="ind-h"
-    >
-      <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-          <div>
-            <Reveal>
-              <p className="mono-label text-amber mb-5">Endüstriler</p>
-            </Reveal>
-            <Reveal delay={0.06}>
-              <h2
-                id="ind-h"
-                className="display text-[clamp(1.9rem,4vw,3.2rem)] text-chalk max-w-xl"
-              >
-                Her sektörün kendi tozu, kendi riski var.
-              </h2>
-            </Reveal>
-          </div>
-          <Reveal delay={0.12}>
-            <p className="text-slate-ink max-w-sm leading-relaxed">
-              Koruma tasarımı malzemenin patlayabilirlik karakteristiğine göre
-              yapılır. Toz numunenizin Kst ve Pmax değerleri belirlenmeden
-              doğru sistem seçilemez.
-            </p>
-          </Reveal>
-        </div>
-
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-steel-line border border-steel-line">
-          {INDUSTRIES.map((ind, i) => (
-            <Reveal key={ind.name} delay={(i % 3) * 0.05} as="li">
-              <div className="group bg-graphite px-6 py-7 h-full hover:bg-steel transition-colors duration-300">
-                <div className="display text-lg md:text-xl text-chalk group-hover:text-amber transition-colors duration-300">
-                  {ind.name}
-                </div>
-                <div className="mono-label text-slate-ink mt-2.5">
-                  {ind.risk}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
+import { RevealImage } from "./image-primitives";
 
 /* ------------------------------------------------------------------
    Services — the three ELVA sells, presented as the sequence a plant
@@ -111,16 +46,30 @@ export function Services() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid md:grid-cols-3 gap-10 md:gap-8">
-          {SERVICES.map((s, i) => (
-            <Reveal key={s.title} delay={0.08 + i * 0.08}>
-              <div className="border-t-2 border-ink pt-6">
-                <div className="mono-label text-ink/50 mb-3">{s.step}</div>
-                <h3 className="display text-xl md:text-2xl mb-3">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-ink/70">{s.body}</p>
-              </div>
-            </Reveal>
-          ))}
+        <div className="mt-12 grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-10 lg:gap-16 items-start">
+          {/* The wipe runs left-to-right here so it reads against the
+              top-to-bottom wipes used on the dark sections. */}
+          <RevealImage
+            src="/img/srv-analiz.webp"
+            alt="ELVA mühendisi tesiste yangın ve patlama risk analizi yaparken"
+            from="left"
+            tint={false}
+            className="aspect-[2/1] lg:aspect-[4/5] border border-paper-line"
+          />
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-8 lg:gap-0">
+            {SERVICES.map((s, i) => (
+              <Reveal key={s.title} delay={0.08 + i * 0.08}>
+                <div className="border-t-2 border-ink pt-6 lg:pb-8">
+                  <div className="mono-label text-ink/50 mb-3">{s.step}</div>
+                  <h3 className="display text-xl md:text-2xl mb-3">{s.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink/70 max-w-lg">
+                    {s.body}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
