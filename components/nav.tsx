@@ -33,7 +33,13 @@ export function Nav() {
         className="mx-auto max-w-[1400px] px-6 lg:px-10 h-16 flex items-center justify-between"
         aria-label="Ana menü"
       >
-        <a href="#main" className="flex items-center gap-2.5" aria-label="ELVA ana sayfa">
+        {/* negative margin keeps the visual position while the padding
+            brings the hit area up to the 44px minimum */}
+        <a
+          href="#main"
+          className="flex items-center gap-2.5 py-3 -my-3 pr-3 -mr-3"
+          aria-label="ELVA ana sayfa"
+        >
           <Wordmark />
         </a>
 
@@ -56,7 +62,7 @@ export function Nav() {
         </div>
 
         <button
-          className="md:hidden text-chalk p-2 -mr-2"
+          className="md:hidden text-chalk p-3 -mr-3 min-h-11 min-w-11 flex items-center justify-center"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-label={open ? "Menüyü kapat" : "Menüyü aç"}

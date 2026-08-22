@@ -107,11 +107,12 @@ body {
   left: -9999px;
   top: 0;
   z-index: 100;
+  /* padding lives in the base rule so the target is never under 44px */
+  padding: 0.75rem 1.25rem;
 }
 .skip-link:focus {
   left: 1rem;
   top: 1rem;
-  padding: 0.75rem 1.25rem;
   background: var(--color-amber);
   color: var(--color-graphite);
   font-weight: 600;
