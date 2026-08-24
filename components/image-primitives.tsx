@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef, type ReactNode } from "react";
 
 /* Photography is treated as a material here, not decoration: every frame is
@@ -13,6 +13,14 @@ import { useRef, type ReactNode } from "react";
  *
  * The wipe reads as a shutter opening, which suits an industrial subject far
  * better than a plain fade, and both properties stay on the compositor.
+ *
+ * The viewport observer watches the OUTER frame, never the clipped element.
+ * Putting `whileInView` on the element that carries the closed clip deadlocks
+ * it: `inset(0 100% 0 0)` collapses the element's visible area to zero, an
+ * IntersectionObserver on it reports `intersectionRatio: 0`, so the animation
+ * that would open the clip never starts. Chrome then compounds it by refusing
+ * to fetch a `loading="lazy"` image with no visible area, so the frame stays
+ * empty forever — which is exactly what shipped here until it was caught.
  */
 export function RevealImage({
   src,
@@ -36,16 +44,18 @@ export function RevealImage({
   tint?: boolean;
 }) {
   const reduced = useReducedMotion();
+  const frame = useRef<HTMLDivElement>(null);
+  const inView = useInView(frame, { once: true, margin: "0px 0px -12% 0px" });
 
   const closed =
     from === "left" ? "inset(0 100% 0 0)" : "inset(100% 0 0 0)";
+  const open = { clipPath: "inset(0 0 0 0)", scale: 1 };
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div ref={frame} className={`relative overflow-hidden ${className}`}>
       <motion.div
         initial={reduced ? false : { clipPath: closed, scale: 1.14 }}
-        whileInView={reduced ? undefined : { clipPath: "inset(0 0 0 0)", scale: 1 }}
-        viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+        animate={reduced || inView ? open : { clipPath: closed, scale: 1.14 }}
         transition={{
           clipPath: { duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] },
           scale: { duration: 1.6, delay, ease: [0.16, 1, 0.3, 1] },
