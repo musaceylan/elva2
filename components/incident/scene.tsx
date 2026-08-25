@@ -43,7 +43,14 @@ export function Scene({
 
   return (
     <Canvas
-      dpr={tier === "high" ? [1, 1.75] : [1, 1.25]}
+      // 1.5 rather than 1.75. The collision — the camera pulled back with the
+      // whole plant lit and fire, mist, steam and smoke all near peak — is the
+      // only shot in the film that misses the 16.67 ms frame budget, and it
+      // misses it by about a millisecond, which costs half the frame rate.
+      // Measured on the worst hardware that still classifies as "high" (Intel
+      // HD 630): 1.75 → 18.0 ms and a hard 30 fps, 1.5 → 13.8 ms and ~57.
+      // Every other shot has headroom at either setting.
+      dpr={tier === "high" ? [1, 1.5] : [1, 1.25]}
       gl={{
         antialias: tier === "high",
         powerPreference: "high-performance",
