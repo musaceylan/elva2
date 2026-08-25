@@ -131,9 +131,25 @@ export function Overlay() {
         ref={capWrap}
         className="absolute right-4 top-20 max-w-[15rem] opacity-0 sm:right-6 sm:top-28 sm:max-w-[19rem] lg:right-14"
       >
-        <div className="border-r-2 border-amber pr-4 text-right">
+        {/* A scrim rides with the caption, the same treatment the brand block
+            gets. The top-right corner is where steam and mist cross the frame
+            during the collision, and unbacked type at this size disappears
+            into them — this lifts the words off the shot rather than
+            darkening the shot to suit the words. */}
+        <div
+          className="pointer-events-none absolute -inset-y-12 -left-16 -right-10"
+          style={{
+            // Radial rather than linear: a linear ramp still cuts off square
+            // at top and bottom, and against full-frame steam that rectangle
+            // is visible as a panel. This falls off in every direction.
+            background:
+              "radial-gradient(115% 95% at 100% 50%, rgba(8,10,12,0.88) 0%, rgba(8,10,12,0.62) 42%, rgba(8,10,12,0.24) 66%, transparent 82%)",
+          }}
+          aria-hidden
+        />
+        <div className="relative border-r-2 border-amber pr-4 text-right">
           <div ref={capTag} className="mono-label text-amber" />
-          <p ref={capLine} className="mt-2 text-[0.8rem] leading-relaxed text-chalk/75 sm:text-sm" />
+          <p ref={capLine} className="mt-2 text-sm leading-relaxed text-chalk sm:text-[0.95rem]" />
         </div>
       </div>
 
