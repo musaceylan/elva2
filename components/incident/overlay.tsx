@@ -19,6 +19,14 @@ import { useIncident } from "./use-incident";
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const ramp = (v: number, a: number, b: number) => clamp01((v - a) / (b - a));
 
+/**
+ * The chapters that get a tick on the scrub rail, each keeping its index into
+ * CHAPTERS so the rail can tell which one the film is actually on.
+ */
+const MARKS = CHAPTERS.map((c, i) => ({ at: c.at, i })).filter(
+  (m) => CHAPTERS[m.i].tag !== "",
+);
+
 export function Overlay() {
   const { subscribe } = useIncident();
 
@@ -33,6 +41,7 @@ export function Overlay() {
   const brandC = useRef<HTMLDivElement>(null);
   const railFill = useRef<HTMLDivElement>(null);
   const railMs = useRef<HTMLSpanElement>(null);
+  const ticks = useRef<(HTMLSpanElement | null)[]>([]);
 
   const lastChapter = useRef(-1);
 
@@ -64,6 +73,26 @@ export function Overlay() {
           lastChapter.current = idx;
           if (capTag.current) capTag.current.textContent = CHAPTERS[idx].tag;
           if (capLine.current) capLine.current.textContent = CHAPTERS[idx].line;
+
+          /* The rail is the only place the film admits it has discrete steps.
+             A bare fill bar reads as one continuous slide, so each step lights
+             as it is passed and the current one is pulled out to a full mark —
+             the viewer can see how many stages there are and which one they
+             are standing in. Driven off the chapter change rather than the
+             frame: these only move at a boundary, and restyling fourteen
+             nodes every frame is a recalc for nothing. */
+          for (let m = 0; m < MARKS.length; m++) {
+            const el = ticks.current[m];
+            if (!el) continue;
+            const active = MARKS[m].i === idx;
+            const passed = MARKS[m].i <= idx;
+            el.style.width = active ? "1.15rem" : passed ? "0.75rem" : "0.55rem";
+            el.style.height = active ? "2px" : "1px";
+            el.style.background = passed
+              ? "var(--color-amber)"
+              : "var(--color-slate-ink)";
+            el.style.opacity = active ? "1" : passed ? "0.7" : "0.35";
+          }
         }
 
         /* ---- brand reveal, only after the viewer has watched it work ---- */
@@ -194,11 +223,20 @@ export function Overlay() {
             className="absolute inset-x-0 top-0 h-full origin-top bg-amber"
             style={{ transform: "scaleY(0)" }}
           />
-          {CHAPTERS.filter((c) => c.tag).map((c) => (
+          {MARKS.map((m, n) => (
             <span
-              key={c.at}
-              className="absolute -left-1 h-px w-2.5 bg-slate-ink"
-              style={{ top: `${c.at * 100}%` }}
+              key={m.at}
+              ref={(el) => {
+                ticks.current[n] = el;
+              }}
+              className="absolute -left-1 transition-[width,height,opacity] duration-300 ease-out"
+              style={{
+                top: `${m.at * 100}%`,
+                width: "0.55rem",
+                height: "1px",
+                background: "var(--color-slate-ink)",
+                opacity: 0.35,
+              }}
             />
           ))}
         </div>
