@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Pipe, Flange, Ribs, Column } from "./parts";
@@ -39,7 +39,6 @@ export function Plant() {
     [mats],
   );
 
-  const shakeRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
     const c = ch.current;
@@ -62,16 +61,6 @@ export function Plant() {
     applyWetness(mats.trim, c.wet * 0.8);
     for (const s of shells) s.roughness = THREE.MathUtils.lerp(0.42, 0.14, c.wet);
 
-    // Vibration: strongest while it burns, plus the impact and the valve snap.
-    if (shakeRef.current) {
-      const t = state.clock.elapsedTime;
-      const a = c.shake * 0.016;
-      shakeRef.current.position.set(
-        Math.sin(t * 41) * a,
-        Math.sin(t * 57 + 1.3) * a * 0.7,
-        Math.cos(t * 37) * a * 0.6,
-      );
-    }
   });
 
   const inletMid = useMemo(
@@ -80,7 +69,7 @@ export function Plant() {
   );
 
   return (
-    <group ref={shakeRef}>
+    <group>
       {/* ---------------- floor + structure ---------------- */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} material={mats.dark}>
         <planeGeometry args={[90, 90]} />

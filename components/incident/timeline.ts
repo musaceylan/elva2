@@ -250,8 +250,9 @@ export function channels(p: number): Channels {
     // than flashing on together.
     reveal: seg(p, 0.928, 1),
 
-    /* ---- vibration: the vessel shakes while it burns, jolts on impact,
-            and takes one hard knock when the isolation valve slams. ---- */
+    /* ---- vibration: rises while the vessel burns, jolts on impact, and
+            takes one hard knock when the isolation valve slams. Camera and
+            plant shake are off; this now only drives the gauge needle. ---- */
     shake:
       track(p, [[0, 0.25], [0.14, 0.7], [0.5, 0.75], [0.6, 0.35], [0.7, 0.12], [0.78, 0], [1, 0]]) +
       pulse(p, 0.53, 0.566) * 0.9 +

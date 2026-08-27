@@ -119,21 +119,10 @@ export function CameraRig() {
     posCurve.getPoint(u, pos);
     lookCurve.getPoint(u, look);
 
-    const t = state.clock.elapsedTime;
-
     // Pointer parallax: a few centimetres of drift, never a look-around.
     if (!reduced) {
       pos.x += pointer.current.x * 0.42;
       pos.y += pointer.current.y * 0.26;
-    }
-
-    // Vibration. It is at its worst while the vessel is burning, spikes on
-    // impact, and takes one hard knock when the isolation valve slams.
-    if (!reduced) {
-      const a = c.shake * 0.05;
-      pos.x += Math.sin(t * 47.3) * a;
-      pos.y += Math.sin(t * 61.7 + 1.1) * a * 0.8;
-      pos.z += Math.cos(t * 39.1) * a * 0.5;
     }
 
     camera.position.copy(pos);
